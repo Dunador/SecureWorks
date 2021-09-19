@@ -17,7 +17,7 @@ export class FriendListComponent {
   @ViewChild(MatTable)
   table!: MatTable<any>;
   friends$: Observable<Friend[]>;
-  displayedColumns = ['friendId', 'firstName', 'lastName', 'age', 'weight'];
+  displayedColumns = ['firstName', 'lastName', 'age', 'weight'];
   dataSource = new MatTableDataSource<Friend>();
 
   constructor(private store: Store<AppState>, private changeDetector: ChangeDetectorRef) { 

@@ -53,6 +53,16 @@ export class FriendFormComponent {
       associatedFriends: this.selectedAssociates || []
     };
 
+    if (
+      this.friendForm.get('firstName')?.value === null ||
+      this.friendForm.get('lastName')?.value === null ||
+      this.friendForm.get('age')?.value === null ||
+      this.friendForm.get('weight')?.value === null
+    ) {
+      alert("Please completely fill out the friend form.  Thank you!");
+      return;
+    }
+
     console.log(friendData);
 
     if (!this.editMode)
