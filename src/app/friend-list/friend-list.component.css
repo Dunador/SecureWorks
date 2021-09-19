@@ -3,3 +3,8 @@
     margin: 20px auto;
     border-radius: 4px;
 }
+
+.mat-column-edit {
+    flex: 0 0 50px;
+    width: 50px !important;
+}

@@ -3,10 +3,11 @@ import { FormBuilder, FormGroupDirective, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Friend } from '../models/friend';
-import { FriendState } from '../ngrx/friends.reducer';
 import { ADD_FRIEND, EDIT_FRIEND } from '../ngrx/friends.actions';
-import { selectFriends } from '../ngrx/friends.selectors';
+import { selectFriendState } from '../ngrx/friends.selectors';
 import { SelectOptions } from '../models/select-options';
+import { AppState } from '../ngrx/app.state';
+import { FriendState } from '../ngrx/friends.reducer';
 
 @Component({
   selector: 'app-friend-form',
@@ -14,9 +15,15 @@ import { SelectOptions } from '../models/select-options';
   styleUrls: ['./friend-form.component.css']
 })
 export class FriendFormComponent {
-  @Input() friendToEdit?: Friend;
-  @Input() editMode: Boolean = false;
-  friends$: Observable<Friend[]>;
+  friendToEdit: Friend = { 
+    firstName: '',
+    lastName: '',
+    age: 0,
+    weight: 0,
+    associatedFriends: []
+  };
+  editMode: Boolean = false;
+  friendState$: Observable<FriendState>;
   selectedAssociates: string[] = [];
   friendSelectOptions: SelectOptions[] = [];
 
@@ -30,17 +37,30 @@ export class FriendFormComponent {
 
   constructor(
     private fb: FormBuilder,
-    private store: Store<FriendState>
+    private store: Store<AppState>
   ) {
-    this.friends$ = this.store.pipe(select(selectFriends));
+    this.friendState$ = this.store.pipe(select(selectFriendState));
   }
 
   ngOnInit() {
-    this.friends$.subscribe((friends) => {
-      this.friendSelectOptions = friends.map((friend) => {
-        return { value: friend.friendId!, displayText: friend.firstName+' '+friend.lastName };
-      });
-    })
+    this.friendState$.subscribe((friendState) => {
+      if (friendState) {
+        this.editMode = friendState.editMode;
+        this.friendToEdit = friendState.friendToEdit;
+        let newFriends = friendState.friends;
+        if(this.editMode) {
+          newFriends = friendState.friends.filter((friend) => friend.friendId !== this.friendToEdit.friendId);
+        }
+        this.friendSelectOptions = newFriends.map((friend) => {
+          return { value: friend.friendId!, displayText: friend.firstName+' '+friend.lastName };
+        });
+        this.friendForm.get('firstName')?.setValue(this.friendToEdit.firstName);
+        this.friendForm.get('lastName')?.setValue(this.friendToEdit.lastName);
+        this.friendForm.get('friends')?.setValue(this.friendToEdit.associatedFriends);
+        this.friendForm.get('age')?.setValue(this.friendToEdit.age);
+        this.friendForm.get('weight')?.setValue(this.friendToEdit.weight);
+      }
+    });
   }
 
   onSubmit(formDirective: FormGroupDirective): void {
@@ -62,8 +82,6 @@ export class FriendFormComponent {
       alert("Please completely fill out the friend form.  Thank you!");
       return;
     }
-
-    console.log(friendData);
 
     if (!this.editMode)
       this.store.dispatch(ADD_FRIEND({ friend: friendData }));

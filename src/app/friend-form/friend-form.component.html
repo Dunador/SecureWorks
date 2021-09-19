@@ -8,7 +8,7 @@
         <div class="col">
           <mat-form-field class="full-width">
             <mat-label>First Name</mat-label>
-            <input matInput placeholder="First name" [value]="friendToEdit?.firstName" formControlName="firstName">
+            <input matInput placeholder="First name" [value]="friendToEdit.firstName" formControlName="firstName">
             <mat-error *ngIf="friendForm.controls['firstName'].hasError('required')">
               First name is <strong>required</strong>
             </mat-error>
@@ -17,7 +17,7 @@
         <div class="col">
           <mat-form-field class="full-width">
             <mat-label>Last Name</mat-label>
-            <input matInput placeholder="Last name" [value]="friendToEdit?.lastName" formControlName="lastName">
+            <input matInput placeholder="Last name" [value]="friendToEdit.lastName" formControlName="lastName">
             <mat-error *ngIf="friendForm.controls['lastName'].hasError('required')">
               Last name is <strong>required</strong>
             </mat-error>
@@ -26,9 +26,9 @@
       </div>
       <div class="row">
         <div class="col">
-          <mat-form-field label="Friends" class="full-width">
+          <mat-form-field class="full-width">
             <mat-label>Associated Friends</mat-label>
-            <mat-select [(ngModel)]="selectedAssociates" formControlName="friends" multiple>
+            <mat-select [(ngModel)]="selectedAssociates" formControlName="friends" [value]="friendToEdit.associatedFriends" multiple>
               <mat-option *ngIf="friendSelectOptions.length === 0" value=''>No Friends Created Yet</mat-option>
               <mat-option *ngFor="let option of friendSelectOptions" [value]="option.value">{{option.displayText}}</mat-option>
             </mat-select>
@@ -39,7 +39,7 @@
         <div class="col">
           <mat-form-field class="full-width">
             <mat-label>Age</mat-label>
-            <input matInput placeholder="Age" type="number" [value]="friendToEdit?.age" formControlName="age">
+            <input matInput placeholder="Age" type="number" [value]="friendToEdit.age" formControlName="age">
             <mat-error *ngIf="friendForm.controls['age'].hasError('required')">
               Age is <strong>required</strong>
             </mat-error>
@@ -48,7 +48,7 @@
         <div class="col">
           <mat-form-field class="full-width">
             <mat-label>Weight</mat-label>
-            <input matInput placeholder="Weight" type="number" [value]="friendToEdit?.weight" formControlName="weight">
+            <input matInput placeholder="Weight" type="number" [value]="friendToEdit.weight" formControlName="weight">
             <mat-error *ngIf="friendForm.controls['weight'].hasError('required')">
               Weight is <strong>required</strong>
             </mat-error>
@@ -57,7 +57,7 @@
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="primary" type="submit" [disabled]="!friendForm.valid">Add Friend</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!friendForm.valid">{{ editMode ? 'Update Friend' : 'Add Friend'}}</button>
     </mat-card-actions>
   </mat-card>
 </form>

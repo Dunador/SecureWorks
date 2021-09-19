@@ -1,4 +1,10 @@
-<mat-table [dataSource]="friends$" class="mat-elevation-z8 friend-list">
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8 friend-list">
+    <ng-container matColumnDef="edit">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let friend">
+            <mat-icon (click)="editFriend(friend)">mode_edit</mat-icon>
+        </mat-cell>
+    </ng-container>
     <ng-container matColumnDef="firstName">
         <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
         <mat-cell *matCellDef="let friend">{{friend.firstName}}</mat-cell>

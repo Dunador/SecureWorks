@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -32,8 +33,9 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     MatRadioModule,
     MatCardModule,
     MatTableModule,
+    MatIconModule,
     ReactiveFormsModule,
-    StoreModule.forRoot({ friends: friendReducer}),
+    StoreModule.forRoot({ friendState: friendReducer}),
     StoreDevtoolsModule.instrument(),
   ],
   providers: [],
