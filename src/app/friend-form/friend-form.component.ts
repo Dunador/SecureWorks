@@ -48,6 +48,7 @@ export class FriendFormComponent {
         this.editMode = friendState.editMode;
         this.friendToEdit = friendState.friendToEdit;
         let newFriends = friendState.friends;
+        // Dont include the current friend being editted as an associated friend select option
         if(this.editMode) {
           newFriends = friendState.friends.filter((friend) => friend.friendId !== this.friendToEdit.friendId);
         }
@@ -64,6 +65,7 @@ export class FriendFormComponent {
   }
 
   onSubmit(formDirective: FormGroupDirective): void {
+    // Construct friend object
     const friendData: Friend = {
       friendId: this.friendToEdit?.friendId,
       firstName: this.friendForm.get('firstName')?.value,
@@ -73,6 +75,7 @@ export class FriendFormComponent {
       associatedFriends: this.selectedAssociates || []
     };
 
+    // Additional validation, in case the user somehow bypassed the baked in form validation
     if (
       this.friendForm.get('firstName')?.value === null ||
       this.friendForm.get('lastName')?.value === null ||
@@ -83,11 +86,13 @@ export class FriendFormComponent {
       return;
     }
 
+    // Dispatch actions, depending on whether we are editing or creating
     if (!this.editMode)
       this.store.dispatch(ADD_FRIEND({ friend: friendData }));
     else
       this.store.dispatch(EDIT_FRIEND({ friend: friendData}));
 
+    // Using Angular Material requires we reset the FormDirective as well as the form, in order to clear any validation
     this.friendForm.reset();
     formDirective.resetForm();
   }

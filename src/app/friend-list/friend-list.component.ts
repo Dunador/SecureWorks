@@ -8,6 +8,8 @@ import { SELECT_FRIEND_TO_EDIT } from '../ngrx/friends.actions';
 import { FriendState } from '../ngrx/friends.reducer';
 import { selectFriendState } from '../ngrx/friends.selectors';
 
+// This component is simply a Material table that contained a clickable icon, that will allow for editting a friend.
+// It displays all basic information about a friend, sans associated friends for potential screen space reasons.
 @Component({
   selector: 'app-friend-list',
   templateUrl: './friend-list.component.html',

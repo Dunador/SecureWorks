@@ -12,6 +12,7 @@ export interface ChartData {
   weight: number,
 }
 
+// First time using D3.js, went with a basic bar chart that displayed your friends age vs weight.  It regenerates each time the FriendState detected a change.
 @Component({
   selector: 'app-friend-chart',
   templateUrl: './friend-chart.component.html',
@@ -27,21 +28,24 @@ export class FriendChartComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    // Call this once on Init, to generate a bare bones graph.
     this.refreshGraph();
     this.friendState$.subscribe((friendState) => {
       this.chartData = this.formatData(friendState.friends);
       this.chartData.sort((a, b) => a.weight - b.weight);
+      // On Each subscription return, refresh the graph display with the new data
       this.refreshGraph()
     });
   }
 
   refreshGraph() {
-    var self = this;
     var svg = d3.select("svg"),
         margin = 200,
         width = parseInt(svg.attr("width")) - margin,
         height = parseInt(svg.attr("height")) - margin
 
+    // Clear any pre-existing graph elements
     svg.selectAll("text").remove();
     svg.selectAll("g").remove();
 
@@ -52,6 +56,7 @@ export class FriendChartComponent implements OnInit {
        .attr("font-size", "24px")
        .text("Friends Age vs Weight")
 
+    // Didnt want the Age X-axis to scale from 0, so instead had it scale based on entries 
     var xScale = d3.scaleLinear().range([width/this.chartData.length/2, width-width/this.chartData.length/2]),
         yScale = d3.scaleLinear().range([height, 0]);
 
@@ -62,6 +67,7 @@ export class FriendChartComponent implements OnInit {
         xScale.domain([d3.min(this.chartData, function(d) { return d.age}), d3.max(this.chartData, function(d) { return d.age; })]);
         yScale.domain([0, d3.max(this.chartData, function(d) { return d.weight; })]);
 
+        // Create X-axis
         g.append("g")
          .attr("transform", "translate(0," + height + ")")
          .call(d3.axisBottom(xScale).tickFormat(function(d) {
@@ -75,6 +81,7 @@ export class FriendChartComponent implements OnInit {
          .attr("stroke", "black")
          .text("Age");
 
+         // Create Y-axis
         g.append("g")
          .call(d3.axisLeft(yScale).tickFormat(function(d){
              return d.toString();
@@ -88,6 +95,7 @@ export class FriendChartComponent implements OnInit {
          .attr("stroke", "black")
          .text("Weight");
 
+         // Add each of the bars to display
         g.selectAll(".bar")
          .data(this.chartData)
          .enter().append("rect")
@@ -98,14 +106,19 @@ export class FriendChartComponent implements OnInit {
          .attr("height", function(d) { return height - yScale(d.weight); });
     }
 
+    // For a chart comparing average weight per age, some data formatting was needed.
     formatData(friends: Friend[]) {
       let data = friends;
       let chartData: ChartData[] = [];
+      // Get each unique age in the current Friends.
       const ages = [...new Set(data.map((x) => x.age))];
+      // For Each age...
       ages.forEach((age) => {
+        // ...determine the number of data entries...
         const length = data.filter((x) => x.age===age).length;
         chartData.push({ 
           age, 
+          // ...And average them all out.
           weight: data.filter((x) => x.age === age).reduce((total, curr) => total + curr.weight / length, 0)
         })
       });

@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { StoreModule } from '@ngrx/store';
+import { friendReducer } from '../ngrx/friends.reducer';
 
 import { FriendChartComponent } from './friend-chart.component';
 
@@ -8,7 +10,10 @@ describe('FriendChartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FriendChartComponent ]
+      declarations: [ FriendChartComponent ],
+      imports: [
+        StoreModule.forRoot({ friendState: friendReducer}),
+      ]
     })
     .compileComponents();
   });
