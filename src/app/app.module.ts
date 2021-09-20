@@ -17,12 +17,14 @@ import { StoreModule } from '@ngrx/store';
 import { friendReducer } from './ngrx/friends.reducer';
 import { FriendListComponent } from './friend-list/friend-list.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { FriendChartComponent } from './friend-chart/friend-chart.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FriendFormComponent,
-    FriendListComponent
+    FriendListComponent,
+    FriendChartComponent
   ],
   imports: [
     BrowserModule,

@@ -4,6 +4,7 @@
 
 .friend-card {
   min-width: 120px;
+  width: 100%;
   margin: 20px auto;
 }
 
